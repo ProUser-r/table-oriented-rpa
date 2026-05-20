@@ -1,0 +1,25 @@
+FROM nvidia/cuda:12.6.3-cudnn-runtime-ubuntu24.04
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    RPA_OCR_DEVICE=auto \
+    DEBIAN_FRONTEND=noninteractive \
+    TZ=Etc/UTC \
+    PATH="/opt/venv/bin:${PATH}"
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 python3-pip python3-venv libgl1 libglib2.0-0 libgomp1 fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY sidecar/requirements-gpu.txt /app/requirements.txt
+RUN python3 -m venv /opt/venv \
+    && python -m pip install --upgrade pip \
+    && python -m pip install -r /app/requirements.txt
+
+COPY sidecar/ocr_service /app/ocr_service
+
+EXPOSE 8765
+CMD ["python", "-m", "uvicorn", "ocr_service.app:app", "--host", "0.0.0.0", "--port", "8765"]

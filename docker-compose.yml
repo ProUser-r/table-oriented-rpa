@@ -1,0 +1,32 @@
+services:
+  ocr-cpu:
+    build:
+      context: .
+      dockerfile: sidecar/Dockerfile.cpu
+    environment:
+      RPA_OCR_DEVICE: ${RPA_OCR_DEVICE:-cpu}
+    ports:
+      - "${RPA_OCR_PORT:-8765}:8765"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ocr-gpu:
+    profiles: ["gpu"]
+    build:
+      context: .
+      dockerfile: sidecar/Dockerfile.gpu
+    environment:
+      RPA_OCR_DEVICE: ${RPA_OCR_DEVICE:-auto}
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    gpus: all
+    ports:
+      - "${RPA_OCR_PORT:-8765}:8765"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
