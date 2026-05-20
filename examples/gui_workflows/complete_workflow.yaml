@@ -1,0 +1,159 @@
+# Complete End-to-End Workflow: Email → Table Analysis → Report
+# This is the most comprehensive example showing all capabilities
+
+name: "Complete Email Table Analysis Workflow"
+description: |
+  This workflow demonstrates the full end-to-end process:
+  1. Open Gmail inbox
+  2. Find email with table images
+  3. Download attachments
+  4. Process tables with TableRobot
+  5. Create detailed report
+  6. Insert analysis into Word document
+  7. Save final report
+
+config:
+  timeout: 180
+  browser_headless: false
+
+steps:
+  # ===== PHASE 1: EMAIL PROCESSING =====
+
+  - id: "phase1_start"
+    name: "[PHASE 1] Email Processing - Starting"
+    action: "screenshot"
+    params:
+      name: "phase1_start"
+
+  - id: "open_gmail"
+    name: "Open Gmail"
+    action: "open_browser"
+    params:
+      url: "https://mail.google.com"
+      headless: false
+
+  - id: "wait_gmail_load"
+    name: "Wait for Gmail to load"
+    action: "wait"
+    params:
+      seconds: 5
+
+  - id: "inbox_screenshot"
+    name: "Screenshot inbox"
+    action: "screenshot"
+    params:
+      name: "01_inbox"
+
+  - id: "find_email"
+    name: "Find and click email with tables"
+    action: "click_email"
+    params:
+      from_sender: "business.data@company.com"
+
+  - id: "wait_email"
+    name: "Wait for email to open"
+    action: "wait"
+    params:
+      seconds: 3
+
+  - id: "email_screenshot"
+    name: "Screenshot email content"
+    action: "screenshot"
+    params:
+      name: "02_email_content"
+
+  - id: "download_images"
+    name: "Download table images"
+    action: "download_attachments"
+    params:
+      download_dir: "./email_attachments"
+      pattern: "*.png"
+      timeout: 30
+
+  - id: "close_gmail"
+    name: "Close Gmail"
+    action: "close_application"
+    params:
+      app: "current"
+
+  # ===== PHASE 2: TABLE ANALYSIS =====
+
+  - id: "phase2_start"
+    name: "[PHASE 2] Table Analysis - Starting"
+    action: "wait"
+    params:
+      seconds: 1
+
+  - id: "analyze"
+    name: "Analyze tables with TableRobot"
+    action: "process_with_robot"
+    params:
+      image_dir: "./email_attachments"
+      output_dir: "./analysis_output"
+      store_result: "table_data"
+
+  # ===== PHASE 3: REPORT GENERATION =====
+
+  - id: "phase3_start"
+    name: "[PHASE 3] Report Generation - Starting"
+    action: "wait"
+    params:
+      seconds: 2
+
+  - id: "open_word"
+    name: "Open Word report template"
+    action: "open_word"
+    params:
+      path: "C:\\reports\\comprehensive_template.docx"
+
+  - id: "wait_word"
+    name: "Wait for Word to open"
+    action: "wait"
+    params:
+      seconds: 4
+
+  - id: "word_screenshot_before"
+    name: "Screenshot Word before insertion"
+    action: "screenshot"
+    params:
+      name: "03_word_template"
+
+  - id: "insert_report"
+    name: "Insert TableRobot analysis report"
+    action: "insert_text"
+    params:
+      search_for: "<!-- TABLE_ANALYSIS_REPORT -->"
+      text: "${table_data.report}"
+
+  - id: "add_metadata"
+    name: "Add metadata about analysis"
+    action: "insert_text"
+    params:
+      search_for: "<!-- ANALYSIS_METADATA -->"
+      text: "Analysis completed. Tables identified: ${table_data.tables}"
+
+  - id: "save_word"
+    name: "Save Word document"
+    action: "save_document"
+    params:
+      wait_before_save: 2
+
+  - id: "word_screenshot_after"
+    name: "Screenshot Word after completion"
+    action: "screenshot"
+    params:
+      name: "04_word_completed"
+
+  - id: "close_word"
+    name: "Close Word"
+    action: "close_application"
+    params:
+      app: "current"
+
+  # ===== COMPLETION =====
+
+  - id: "completion"
+    name: "Workflow completed successfully"
+    action: "screenshot"
+    params:
+      name: "05_completion"

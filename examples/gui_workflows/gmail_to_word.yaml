@@ -1,0 +1,129 @@
+# Complete workflow: Gmail → TableRobot → Word Report
+# This workflow extracts table images from emails, analyzes them, and creates a report
+
+name: "Gmail Tables to Word Report"
+description: "Extract table images from Gmail, analyze with TableRobot, insert report into Word"
+
+config:
+  timeout: 120
+  browser_headless: false
+
+steps:
+  # Step 1: Open Gmail
+  - id: "gmail_open"
+    name: "Open Gmail inbox"
+    action: "open_browser"
+    params:
+      url: "https://mail.google.com"
+      headless: false
+
+  # Step 2: Wait for page load
+  - id: "gmail_wait"
+    name: "Wait for Gmail to load"
+    action: "wait"
+    params:
+      seconds: 4
+
+  # Step 3: Debug screenshot
+  - id: "gmail_inbox_screenshot"
+    name: "Screenshot Gmail inbox"
+    action: "screenshot"
+    params:
+      name: "inbox"
+
+  # Step 4: Click on email from specific sender
+  - id: "click_email"
+    name: "Open email from data team"
+    action: "click_email"
+    params:
+      from_sender: "data.team@example.com"
+
+  # Step 5: Wait for email to open
+  - id: "email_wait"
+    name: "Wait for email to load"
+    action: "wait"
+    params:
+      seconds: 2
+
+  # Step 6: Screenshot email content
+  - id: "email_screenshot"
+    name: "Screenshot email content"
+    action: "screenshot"
+    params:
+      name: "email_with_tables"
+
+  # Step 7: Download table images
+  - id: "download_tables"
+    name: "Download table images from email"
+    action: "download_attachments"
+    params:
+      download_dir: "./temp_images"
+      pattern: "*.png"
+      timeout: 30
+
+  # Step 8: Process tables with TableRobot
+  - id: "analyze_tables"
+    name: "Analyze tables with TableRobot"
+    action: "process_with_robot"
+    params:
+      image_dir: "./temp_images"
+      output_dir: "./output"
+      store_result: "table_analysis"
+
+  # Step 9: Close Gmail
+  - id: "gmail_close"
+    name: "Close Gmail browser"
+    action: "close_application"
+    params:
+      app: "current"
+
+  # Step 10: Wait a moment before opening Word
+  - id: "transition_wait"
+    name: "Wait before opening Word"
+    action: "wait"
+    params:
+      seconds: 2
+
+  # Step 11: Open Word document
+  - id: "word_open"
+    name: "Open Word report template"
+    action: "open_word"
+    params:
+      path: "./reports/template.docx"
+
+  # Step 12: Wait for Word to load
+  - id: "word_wait"
+    name: "Wait for Word to open"
+    action: "wait"
+    params:
+      seconds: 3
+
+  # Step 13: Insert analysis report
+  - id: "insert_report"
+    name: "Insert TableRobot analysis"
+    action: "insert_text"
+    params:
+      search_for: "<!-- REPORT_HERE -->"
+      text: "${table_analysis.report}"
+
+  # Step 14: Save document
+  - id: "word_save"
+    name: "Save Word document"
+    action: "save_document"
+    params:
+      wait_before_save: 1
+
+  # Step 15: Final screenshot
+  - id: "final_screenshot"
+    name: "Screenshot final report"
+    action: "screenshot"
+    params:
+      name: "report_completed"
+
+  # Step 16: Close Word
+  - id: "word_close"
+    name: "Close Word"
+    action: "close_application"
+    params:
+      app: "current"
+

@@ -17,6 +17,8 @@ dependencies = [
     "pillow>=10.4",
     "pydantic>=2.8",
     "python-dotenv>=1.0",
+    "rpaframework>=30.0",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

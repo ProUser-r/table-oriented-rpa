@@ -1,0 +1,116 @@
+# Complete workflow: Outlook → TableRobot → Word Report
+# This workflow processes tables from Outlook emails and creates an analysis report
+
+name: "Outlook Tables to Word Report"
+description: "Extract tables from Outlook, analyze with TableRobot, generate Word report"
+
+config:
+  timeout: 120
+  browser_headless: false
+
+steps:
+  # Email processing phase
+  - id: "outlook_open"
+    name: "Open Outlook Web Access"
+    action: "open_browser"
+    params:
+      url: "https://outlook.office.com"
+      headless: false
+
+  - id: "outlook_wait_load"
+    name: "Wait for Outlook to load"
+    action: "wait"
+    params:
+      seconds: 5
+
+  - id: "outlook_inbox_screenshot"
+    name: "Screenshot Outlook inbox"
+    action: "screenshot"
+    params:
+      name: "outlook_inbox"
+
+  - id: "click_email_from_department"
+    name: "Open email from department"
+    action: "click_email"
+    params:
+      subject: "Table Data"
+
+  - id: "outlook_email_wait"
+    name: "Wait for email to load"
+    action: "wait"
+    params:
+      seconds: 2
+
+  - id: "outlook_email_screenshot"
+    name: "Screenshot email"
+    action: "screenshot"
+    params:
+      name: "email_body"
+
+  - id: "save_attachments"
+    name: "Save table images"
+    action: "download_attachments"
+    params:
+      download_dir: "./attachments/tables"
+      pattern: "*.png"
+      timeout: 30
+
+  - id: "close_outlook"
+    name: "Close Outlook"
+    action: "close_application"
+    params:
+      app: "current"
+
+  # Table analysis phase
+  - id: "analyze_tables"
+    name: "Process tables with TableRobot"
+    action: "process_with_robot"
+    params:
+      image_dir: "./attachments/tables"
+      output_dir: "./reports"
+      store_result: "analysis"
+
+  # Report writing phase
+  - id: "wait_before_word"
+    name: "Wait before opening Word"
+    action: "wait"
+    params:
+      seconds: 2
+
+  - id: "open_report_template"
+    name: "Open Word report template"
+    action: "open_word"
+    params:
+      path: "C:\\reports\\analysis_template.docx"
+
+  - id: "word_wait"
+    name: "Wait for Word"
+    action: "wait"
+    params:
+      seconds: 3
+
+  - id: "write_analysis"
+    name: "Insert analysis report"
+    action: "insert_text"
+    params:
+      search_for: "<!-- ANALYSIS -->"
+      text: "${analysis.report}"
+
+  - id: "save_report"
+    name: "Save report"
+    action: "save_document"
+    params:
+      wait_before_save: 1
+
+  - id: "final_report_screenshot"
+    name: "Screenshot final report"
+    action: "screenshot"
+    params:
+      name: "final_report"
+
+  - id: "close_word"
+    name: "Close Word"
+    action: "close_application"
+    params:
+      app: "current"
+
