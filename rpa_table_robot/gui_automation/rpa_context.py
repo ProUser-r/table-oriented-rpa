@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from rpa_table_robot.gui_automation.config import GUIAutomationConfig
 from rpa_table_robot.models import RobotResult
 
 
@@ -14,12 +15,14 @@ class WorkflowContext:
     """Context for workflow execution."""
 
     workflow_name: str
+    config: GUIAutomationConfig
     variables: dict[str, Any] = field(default_factory=dict)
     step_results: dict[str, Any] = field(default_factory=dict)
     robot_result: RobotResult | None = None
     screenshots: list[Path] = field(default_factory=list)
     current_step_id: str | None = None
     current_step_name: str | None = None
+    playwright_runtime: Any | None = None
 
     def set_variable(self, key: str, value: Any) -> None:
         """Set a variable in context."""

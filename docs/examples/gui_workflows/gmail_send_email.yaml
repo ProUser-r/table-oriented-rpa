@@ -1,0 +1,29 @@
+name: "Gmail Send Email"
+description: "Compose and send Gmail message via browser GUI"
+
+config:
+  timeout: 60
+  browser_headless: false
+
+steps:
+  - id: "gmail_open"
+    name: "Open Gmail"
+    action: "open_browser"
+    params:
+      url: "https://mail.google.com/mail/u/0/#inbox"
+
+  - id: "send_email"
+    name: "Compose and send"
+    action: "send_email_gmail"
+    params:
+      to:
+        - "ops@example.com"
+      subject: "Automated report"
+      body: "Report generated successfully. See attachments."
+      attachments:
+        - "./output/report.md"
+      send: true
+
+  - id: "close_browser"
+    name: "Close browser"
+    action: "close_application"

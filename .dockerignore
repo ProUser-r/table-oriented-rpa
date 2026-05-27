@@ -2,6 +2,7 @@
 .agents
 .codex
 rpa_venv
+rpa_venv_win
 __pycache__
 *.pyc
 .pytest_cache
@@ -9,3 +10,5 @@ output
 dist
 build
 *.egg-info
+.playwright
+rubert_it_classifier

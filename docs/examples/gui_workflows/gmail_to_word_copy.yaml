@@ -1,0 +1,43 @@
+name: "Gmail Unread Tables"
+description: "Open unread messages from sender in Gmail and download table images"
+
+config:
+  timeout: 60
+  browser_headless: false
+
+steps:
+  - id: "gmail_open"
+    name: "Open Gmail"
+    action: "open_browser"
+    params:
+      url: "https://mail.google.com/mail/u/0/#inbox"
+
+  - id: "open_unread_email"
+    name: "Open unread email from sender"
+    action: "click_email"
+    params:
+      from_sender: "arturiasn@gmail.com"
+      unread_only: true
+      subject: "Тест"
+
+  - id: "download_tables"
+    name: "Download png and jpg attachments"
+    action: "download_attachments"
+    params:
+      download_dir: "./temp_images"
+      pattern: "*.png"
+      timeout: 45
+      max_files: 20
+
+  - id: "close_browser"
+    name: "Close browser"
+    action: "close_application"
+
+  # - id: "process_tables"
+  #   name: "Process downloaded images"
+  #   action: "process_with_robot"
+  #   params:
+  #     image_dir: "./temp_images"
+  #     output_dir: "./output"
+  #     store_result: "table_analysis"
+

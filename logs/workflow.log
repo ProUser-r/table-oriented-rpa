@@ -1,0 +1,32 @@
+[INFO] 2026-05-28 00:46:24,491 - rpa_table_robot.gui_automation.workflow_engine - execute - Starting workflow: Gmail Unread Tables
+[INFO] 2026-05-28 00:46:24,492 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Executing: Open Gmail
+[INFO] 2026-05-28 00:46:25,688 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Step completed successfully
+[INFO] 2026-05-28 00:46:25,688 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Executing: Open unread email from sender
+[INFO] 2026-05-28 00:46:37,099 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Step completed successfully
+[INFO] 2026-05-28 00:46:37,099 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Executing: Download png and jpg attachments
+[INFO] 2026-05-28 00:46:38,753 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Step completed successfully
+[INFO] 2026-05-28 00:46:38,754 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Executing: Close browser
+[INFO] 2026-05-28 00:46:39,019 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Step completed successfully
+[INFO] 2026-05-28 00:46:39,019 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [process_tables] Executing: Process downloaded images
+[INFO] 2026-05-28 00:46:39,306 - httpx - _send_single_request - HTTP Request: GET http://127.0.0.1:8765/health "HTTP/1.1 200 OK"
+[INFO] 2026-05-28 00:51:26,662 - rpa_table_robot.gui_automation.workflow_engine - execute - Starting workflow: Gmail Unread Tables
+[INFO] 2026-05-28 00:51:26,662 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Executing: Open Gmail
+[INFO] 2026-05-28 00:51:27,304 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Step completed successfully
+[INFO] 2026-05-28 00:51:27,304 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Executing: Open unread email from sender
+[INFO] 2026-05-28 00:51:32,634 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Step completed successfully
+[INFO] 2026-05-28 00:51:32,635 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Executing: Download png and jpg attachments
+[INFO] 2026-05-28 00:51:32,638 - rpa_table_robot.gui_automation.builtin_actions - execute - No Gmail attachments found in current email
+[INFO] 2026-05-28 00:51:32,638 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Step completed successfully
+[INFO] 2026-05-28 00:51:32,638 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Executing: Close browser
+[INFO] 2026-05-28 00:51:32,830 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Step completed successfully
+[INFO] 2026-05-28 00:51:32,830 - rpa_table_robot.gui_automation.workflow_engine - execute - Workflow completed successfully: Gmail Unread Tables
+[INFO] 2026-05-28 00:52:20,000 - rpa_table_robot.gui_automation.workflow_engine - execute - Starting workflow: Gmail Unread Tables
+[INFO] 2026-05-28 00:52:20,000 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Executing: Open Gmail
+[INFO] 2026-05-28 00:52:20,619 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [gmail_open] Step completed successfully
+[INFO] 2026-05-28 00:52:20,619 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Executing: Open unread email from sender
+[INFO] 2026-05-28 00:52:24,807 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [open_unread_email] Step completed successfully
+[INFO] 2026-05-28 00:52:24,807 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Executing: Download png and jpg attachments
+[INFO] 2026-05-28 00:52:26,588 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [download_tables] Step completed successfully
+[INFO] 2026-05-28 00:52:26,588 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Executing: Close browser
+[INFO] 2026-05-28 00:52:26,789 - rpa_table_robot.gui_automation.workflow_engine - _execute_step - [close_browser] Step completed successfully
+[INFO] 2026-05-28 00:52:26,789 - rpa_table_robot.gui_automation.workflow_engine - execute - Workflow completed successfully: Gmail Unread Tables

@@ -21,6 +21,11 @@ class GUIAutomationConfig:
     browser_headless: bool = False
     robot_config: RobotConfig | None = None
     timeout: float = 30.0
+    playwright_user_data_dir: Path = Path("./.playwright/gmail-profile")
+    playwright_channel: str | None = None
+    playwright_browser_name: str = "chromium"
+    downloads_dir: Path = Path("./attachments")
+    gmail_base_url: str = "https://mail.google.com"
 
     @classmethod
     def from_env(cls) -> "GUIAutomationConfig":
@@ -31,12 +36,15 @@ class GUIAutomationConfig:
         - RPA_GUI_LOG_LEVEL: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         - RPA_GUI_BROWSER_HEADLESS: Browser headless mode (true/false)
         - RPA_GUI_TIMEOUT: Global timeout in seconds
+        - RPA_PLAYWRIGHT_USER_DATA_DIR: Playwright persistent profile directory
+        - RPA_PLAYWRIGHT_CHANNEL: Browser channel (e.g. chrome/msedge)
+        - RPA_PLAYWRIGHT_BROWSER: Browser name (chromium/firefox/webkit)
+        - RPA_GUI_DOWNLOADS_DIR: Default attachments directory
+        - RPA_GMAIL_BASE_URL: Gmail base URL
         """
         load_dotenv()
 
-        workflow_dir = Path(
-            os.getenv("RPA_GUI_WORKFLOW_DIR", str(cls.workflow_dir))
-        )
+        workflow_dir = Path(os.getenv("RPA_GUI_WORKFLOW_DIR", str(cls.workflow_dir)))
 
         log_level_str = os.getenv("RPA_GUI_LOG_LEVEL", "INFO").upper()
         log_level_map = {
@@ -51,6 +59,14 @@ class GUIAutomationConfig:
         browser_headless = os.getenv("RPA_GUI_BROWSER_HEADLESS", "false").lower() == "true"
         timeout = float(os.getenv("RPA_GUI_TIMEOUT", "30"))
 
+        playwright_user_data_dir = Path(
+            os.getenv("RPA_PLAYWRIGHT_USER_DATA_DIR", str(cls.playwright_user_data_dir))
+        )
+        playwright_channel = os.getenv("RPA_PLAYWRIGHT_CHANNEL")
+        playwright_browser_name = os.getenv("RPA_PLAYWRIGHT_BROWSER", cls.playwright_browser_name)
+        downloads_dir = Path(os.getenv("RPA_GUI_DOWNLOADS_DIR", str(cls.downloads_dir)))
+        gmail_base_url = os.getenv("RPA_GMAIL_BASE_URL", cls.gmail_base_url)
+
         robot_config = RobotConfig.from_env()
 
         return cls(
@@ -59,6 +75,11 @@ class GUIAutomationConfig:
             browser_headless=browser_headless,
             robot_config=robot_config,
             timeout=timeout,
+            playwright_user_data_dir=playwright_user_data_dir,
+            playwright_channel=playwright_channel,
+            playwright_browser_name=playwright_browser_name,
+            downloads_dir=downloads_dir,
+            gmail_base_url=gmail_base_url,
         )
 
     def validate(self) -> None:
@@ -68,6 +89,9 @@ class GUIAutomationConfig:
 
         if self.timeout <= 0:
             raise ValueError(f"Timeout must be positive: {self.timeout}")
+
+        if self.playwright_browser_name not in {"chromium", "firefox", "webkit"}:
+            raise ValueError("RPA_PLAYWRIGHT_BROWSER must be one of: chromium, firefox, webkit")
 
         if self.robot_config:
             self.robot_config.validate()

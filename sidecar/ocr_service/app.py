@@ -56,18 +56,18 @@ class PaddleTableEngine:
         if device == "cpu":
             attempts.extend(
                 [
-                    {"device": "cpu", "enable_mkldnn": False},
-                    {"device": "cpu"},
+                    {"device": "cpu", "enable_mkldnn": False, "lang": "ru"},
+                    {"device": "cpu", "lang": "ru"},
                 ]
             )
         else:
             attempts.extend(
                 [
-                    {"device": "gpu:0"},
-                    {"device": "gpu"},
+                    {"device": "gpu:0", "lang": "ru"},
+                    {"device": "gpu", "lang": "ru"},
                 ]
             )
-        attempts.append({})
+        attempts.append({"lang": "ru"})
         for kwargs in attempts:
             try:
                 self._pipeline = PPStructureV3(**kwargs)

@@ -1,0 +1,50 @@
+name: "Gmail OCR -> Classify -> Send"
+description: "Download unread table attachments, recognize rows, classify by IT topic, send to recipients from sqlite"
+
+config:
+  timeout: 60
+  browser_headless: false
+
+steps:
+  - id: "gmail_open"
+    name: "Open Gmail"
+    action: "open_browser"
+    params:
+      url: "https://mail.google.com/mail/u/0/#inbox"
+
+  - id: "open_unread_email"
+    name: "Open unread email from sender"
+    action: "click_email"
+    params:
+      from_sender: "data.team@example.com"
+      unread_only: true
+
+  - id: "download_tables"
+    name: "Download table attachments"
+    action: "download_attachments"
+    params:
+      download_dir: "./attachments/tables"
+      pattern: "*.png"
+      timeout: 45
+
+  - id: "process_tables"
+    name: "Recognize tables via OCR"
+    action: "process_with_robot"
+    params:
+      image_dir: "./attachments/tables"
+      output_dir: "./output"
+      store_result: "robot_result"
+
+  - id: "route_and_send"
+    name: "Classify rows and send to recipients"
+    action: "route_and_send_from_tables"
+    params:
+      source_result: "robot_result"
+      db_path: "data/sqlite.db"
+      model_dir: "data/rubert_it_classifier"
+      send: false
+      stop_on_error: false
+
+  - id: "close_browser"
+    name: "Close browser"
+    action: "close_application"

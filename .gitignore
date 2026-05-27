@@ -6,3 +6,9 @@ build/
 dist/
 output/
 .env
+rpa_venv/
+rpa_venv_win/
+.playwright/
+rubert_it_classifier
+temp_images/
+attachments/
